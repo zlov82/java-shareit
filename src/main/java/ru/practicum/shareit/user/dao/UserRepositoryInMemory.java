@@ -40,9 +40,9 @@ public class UserRepositoryInMemory implements UserRepository {
 
     private boolean notCrossEmail(User user) {
         Optional<User> optionalUser = userDb.values().stream()
-                .filter(u -> u.getId() != user.getId())
-                .filter(u -> u.getEmail().equals(user.getEmail()))
-                .findAny();
+                .filter(u -> !u.getId().equals(user.getId()))
+                .filter(u -> u.getEmail().equalsIgnoreCase(user.getEmail()))
+                .findFirst();
         return optionalUser.isEmpty();
     }
 }
