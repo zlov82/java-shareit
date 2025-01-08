@@ -19,12 +19,12 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        log.info("Добавление пользователя {}", user);
+        log.trace("Добавление пользователя {}", user);
         return userRepository.saveUser(user);
     }
 
     public User updateUserBuId(long id, UserUpdateRequest userUpdateRequest) {
-        log.info("Обновление пользователя с номером {} {}", id, userUpdateRequest);
+        log.trace("Обновление пользователя с номером {} {}", id, userUpdateRequest);
         User savedUser = this.getById(id);
 
         if (userUpdateRequest.getEmail() != null) {
