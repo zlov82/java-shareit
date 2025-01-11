@@ -5,20 +5,25 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class ItemRepositoryInMemory implements ItemRepository {
 
-    private final HashMap<Long, Item> itemDb = new HashMap<>();
+    private final Map<Long, Item> itemDb = new HashMap<>();
+    private long itemsCounter = 0L;
 
     @Override
     public Item saveItem(Item item) {
-        if (item.getId() == null) {
-            long lastCountItem = itemDb.size();
-            item.setId(++lastCountItem);
-        }
+        item.setId(++itemsCounter);
         itemDb.put(item.getId(), item);
+        return item;
+    }
+
+    @Override
+    public Item updateItem(Item item) {
+        itemDb.put(item.getId(),item);
         return item;
     }
 

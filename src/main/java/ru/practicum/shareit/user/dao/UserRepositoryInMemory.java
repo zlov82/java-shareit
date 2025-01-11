@@ -4,27 +4,41 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.EmailValidationException;
 import ru.practicum.shareit.user.User;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserRepositoryInMemory implements UserRepository {
 
-    private final HashMap<Long, User> userDb = new HashMap<>();
+    private final Map<Long, User> userDb = new HashMap<>();
+    private final Set<String> emailUniqSet = new HashSet<>();
+    private long userCounter = 0L;
 
     @Override
     public User saveUser(User user) {
 
-        if (!notCrossEmail(user)) {
+        if (emailUniqSet.contains(user.getEmail())) {
             throw new EmailValidationException("Email ранее уже использовался");
         }
-
-        if (user.getId() == null) {
-            long lastUserId = userDb.size();
-            user.setId(++lastUserId);
-        }
-
+        user.setId(++userCounter);
+        emailUniqSet.add(user.getEmail());
         userDb.put(user.getId(), user);
+        return user;
+    }
+
+    @Override
+    public User updateUser(User user) {
+        final String email = user.getEmail();
+        userDb.computeIfPresent(user.getId(), (id, u) -> {
+                    if (!email.equals(u.getEmail())) {
+                        if (emailUniqSet.contains(email)) {
+                            throw new EmailValidationException("Email: " + email + " already exists");
+                        }
+                        emailUniqSet.remove(u.getEmail());
+                        emailUniqSet.add(email);
+                    }
+                    return user;
+                }
+        );
         return user;
     }
 
@@ -35,14 +49,10 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public void deleteUserById(long id) {
-        userDb.remove(id);
-    }
-
-    private boolean notCrossEmail(User user) {
-        Optional<User> optionalUser = userDb.values().stream()
-                .filter(u -> !u.getId().equals(user.getId()))
-                .filter(u -> u.getEmail().equalsIgnoreCase(user.getEmail()))
-                .findFirst();
-        return optionalUser.isEmpty();
+        Optional<User> optionalUser = this.getUserById(id);
+        if (optionalUser.isPresent()) {
+            userDb.remove(id);
+            emailUniqSet.remove(optionalUser.get().getEmail());
+        }
     }
 }

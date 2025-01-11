@@ -13,10 +13,4 @@ public class Item {
     private boolean available;
     private long owner;
     private ItemRequest request;
-
 }
-
-
-
-
-

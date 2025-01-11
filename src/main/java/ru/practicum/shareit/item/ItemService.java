@@ -49,7 +49,6 @@ public class ItemService {
             throw new NotFoundException("Запрос на изменение вещи не от владельца");
         }
 
-        //Item updatedItem = ItemMapper.toItem(updateItemRequest);
         if (updateItemRequest.getName() != null) {
             savedItem.setName(updateItemRequest.getName());
         }
@@ -60,7 +59,7 @@ public class ItemService {
             savedItem.setAvailable(updateItemRequest.getAvailable());
         }
         log.info("Обновленная вещь {}", savedItem);
-        return itemRepository.saveItem(savedItem);
+        return itemRepository.updateItem(savedItem);
     }
 
     public List<Item> search(String text) {

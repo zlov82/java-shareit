@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface ItemRepository {
     Item saveItem(Item item);
 
+    Item updateItem(Item item);
+
     Optional<Item> getById(long itemId);
 
     List<Item> getAllByUser(long userId);
