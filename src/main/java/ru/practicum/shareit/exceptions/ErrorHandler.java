@@ -24,4 +24,11 @@ public class ErrorHandler {
         log.error("Ошибка {}", e.getMessage());
         return new ErrResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrResponse handleBadRequest(final ForbiddenException e) {
+        log.error("Невалидный запрос: {}", e.getMessage());
+        return new ErrResponse(e.getMessage());
+    }
 }

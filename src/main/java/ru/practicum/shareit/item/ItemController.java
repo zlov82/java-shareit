@@ -4,9 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CreateItemRequest;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.UpdateItemRequest;
+import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final CommentService commentService;
 
     @GetMapping()
     public List<ItemDto> getAllItemsByUsers(@RequestHeader("X-Sharer-User-Id") long userId) {
@@ -48,7 +48,17 @@ public class ItemController {
     public ItemDto addNewItem(@RequestHeader("X-Sharer-User-Id") long userId,
                               @Valid @RequestBody CreateItemRequest createItemRequest) {
         log.info("====Сохранение вещи");
-        return ItemMapper.toItemDto(itemService.saveItem(userId, createItemRequest));
+        Item item = itemService.saveItem(userId, createItemRequest);
+        return ItemMapper.toItemDto(item);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                 @PathVariable long itemId,
+                                 @Valid @RequestBody CreateCommentRequest commentRequest) {
+
+        Item item = itemService.getItemById(itemId);
+        return ItemMapper.commentDto(commentService.addComment(userId, item, commentRequest.getText()));
     }
 
     @PatchMapping("/{itemId}")
