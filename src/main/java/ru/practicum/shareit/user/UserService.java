@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User getById(long id) {
-        Optional<User> optionalUser = userRepository.getUserById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             return User.builder()
                     .id(optionalUser.get().getId())
@@ -33,7 +33,7 @@ public class UserService {
     public User addUser(UserCreateRequest userCreateRequest) {
         log.trace("Добавление пользователя {}", userCreateRequest);
         User newUser = UserMapper.toUser(userCreateRequest);
-        return userRepository.saveUser(newUser);
+        return userRepository.save(newUser);
     }
 
     public User updateUserById(long id, UserUpdateRequest userUpdateRequest) {
@@ -47,10 +47,10 @@ public class UserService {
         if (userUpdateRequest.getName() != null) {
             savedUser.setName(userUpdateRequest.getName());
         }
-        return userRepository.updateUser(savedUser);
+        return userRepository.save(savedUser);
     }
 
     public void deleteUserById(long id) {
-        userRepository.deleteUserById(id);
+        userRepository.deleteById(id);
     }
 }
