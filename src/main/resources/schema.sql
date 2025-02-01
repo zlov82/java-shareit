@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS items (
 	available bool NOT NULL,
 	owner_id BIGINT NULL,
 	CONSTRAINT items_pk PRIMARY KEY (id),
-	CONSTRAINT items_users_fk FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+	CONSTRAINT items_users_fk FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS booking (
@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS booking (
 	booker_id BIGINT NOT NULL,
 	status varchar NOT NULL,
 	CONSTRAINT booking_pk PRIMARY KEY (id),
-	CONSTRAINT booking_items_fk FOREIGN KEY (item_id) REFERENCES public.items(id),
-	CONSTRAINT booking_users_fk FOREIGN KEY (booker_id) REFERENCES public.users(id)
+	CONSTRAINT booking_items_fk FOREIGN KEY (item_id) REFERENCES items(id),
+	CONSTRAINT booking_users_fk FOREIGN KEY (booker_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -35,6 +35,6 @@ CREATE TABLE IF NOT EXISTS comments (
 	user_id BIGINT NOT NULL,
 	created timestamp NOT NULL,
 	CONSTRAINT comments_pk PRIMARY KEY (id),
-	CONSTRAINT comments_items_fk FOREIGN KEY (item_id) REFERENCES public.items(id),
-	CONSTRAINT comments_users_fk FOREIGN KEY (user_id) REFERENCES public.users(id)
+	CONSTRAINT comments_items_fk FOREIGN KEY (item_id) REFERENCES items(id),
+	CONSTRAINT comments_users_fk FOREIGN KEY (user_id) REFERENCES users(id)
 );
