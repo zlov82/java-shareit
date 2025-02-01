@@ -57,6 +57,22 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             ORDER BY start ASC
             """;
 
+    String QUERY_LAST_BOOKING = """
+            SELECT MAX(b.start)
+            FROM Booking as b
+            WHERE b.item = :item
+            AND b.status = 'APPROVED'
+            AND b.end < :now
+            """;
+
+    String QUERY_NEXT_BOOKING = """
+            SELECT MIN(b.end)
+            FROM Booking as b
+            WHERE b.item = :item
+            AND b.status = 'APPROVED'
+            AND b.start > :now
+            """;
+
     List<Booking> findAllByUserOrderByStartDesc(User user);
 
     @Query(QUERY_OWNER_ALL)
@@ -83,4 +99,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByOwnerPast(@Param("owner") User owner, @Param("now") LocalDateTime now);
 
     boolean existsByItemAndUserAndStatusAndEndBefore(Item item, User booker, BookingStatus status, LocalDateTime now);
+
+    @Query(QUERY_LAST_BOOKING)
+    LocalDateTime findLastBookingDate(Item item, LocalDateTime now);
+
+    @Query(QUERY_NEXT_BOOKING)
+    LocalDateTime findNextBookingDate(Item item, LocalDateTime now);
 }

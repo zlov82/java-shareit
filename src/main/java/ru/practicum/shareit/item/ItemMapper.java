@@ -22,11 +22,9 @@ public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
 
         List<CommentDto> commentDtoList = new ArrayList<>();
-
-
-            commentDtoList = item.getComments().stream()
-                    .map(ItemMapper::commentDto)
-                    .toList();
+        commentDtoList = item.getComments().stream()
+                .map(ItemMapper::commentDto)
+                .toList();
 
 
         return ItemDto.builder()
@@ -36,6 +34,8 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.isAvailable())
                 .comments(commentDtoList)
+                .lastBooking(item.getLastBooking())
+                .nextBooking(item.getNextBooking())
                 .build();
     }
 

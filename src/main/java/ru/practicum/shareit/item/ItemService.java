@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.CreateItemRequest;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +25,12 @@ public class ItemService {
     private final UserService userService;
     private final ItemRepository itemRepository;
     private final CommentService commentService;
+    private final BookingRepository bookingRepository;
 
     public Item saveItem(long userId, CreateItemRequest createItemRequest) {
         User owner = userService.getById(userId);
         Item item = ItemMapper.toItem(createItemRequest);
         item.setOwner(owner);
-        item.setComments(new ArrayList<>());
         log.info("Вещь для сохранения: {}", item);
         return itemRepository.save(item);
     }
@@ -36,17 +38,28 @@ public class ItemService {
 
     public Item getItemById(long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
+
         List<Comment> commentList = new ArrayList<>();
         commentList = commentService.getItemComments(item);
         log.info("Получены комментарии {}", commentList);
         item.setComments(commentList);
+
         log.info("Вещь для возвращения {}", item);
         return item;
     }
 
     public List<Item> getAllByUser(long userId) {
         User owner = userService.getById(userId);
-        return itemRepository.findAllByOwner(owner);
+        List<Item> itemList = itemRepository.findAllByOwner(owner);
+
+        LocalDateTime now = LocalDateTime.now();
+        for (Item item : itemList) {
+            LocalDateTime lastBookingDate = bookingRepository.findLastBookingDate(item, now);
+            LocalDateTime nextBookingDate = bookingRepository.findNextBookingDate(item, now);
+            item.setLastBooking(lastBookingDate);
+            item.setNextBooking(nextBookingDate);
+        }
+        return itemList;
     }
 
     public Item updateItem(long userId, long itemId, UpdateItemRequest updateItemRequest) {

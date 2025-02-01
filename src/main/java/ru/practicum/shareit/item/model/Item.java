@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,14 @@ public class Item {
     private User owner;
 
     @Transient
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
+
+    @Transient
+    private LocalDateTime lastBooking;
+
+    @Transient
+    private LocalDateTime nextBooking;
 
     @Override
     public boolean equals(Object o) {
@@ -50,6 +58,7 @@ public class Item {
                 ", description='" + description + '\'' +
                 ", available=" + available +
                 ", owner=" + owner +
+                ", comments=" + comments +
                 '}';
     }
 }

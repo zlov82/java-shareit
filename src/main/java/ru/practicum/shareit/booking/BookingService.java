@@ -30,9 +30,6 @@ public class BookingService {
             throw new ForbiddenException("Вещь недоступна для бронирования");
         }
 
-        //todo: Проверить, что даты бронивания из запроса на бронь не совпадают с уже существующей бронью
-        //
-
         Booking booking = BookingMapper.toBooking(createBookingRequest, user, item);
         log.info("Бронь для сохранения {}", booking);
         return bookingRepository.save(booking);
@@ -48,7 +45,6 @@ public class BookingService {
         if (approved == null || !approved) {
             booking.setStatus(BookingStatus.REJECTED);
         } else {
-            //todo: Проверить, что даты бронивания из запроса на бронь не совпадают с уже существующей бронью
             booking.setStatus(BookingStatus.APPROVED);
         }
 

@@ -36,6 +36,7 @@ public class Booking {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private BookingStatus status = BookingStatus.WAITING;
 
     @Override

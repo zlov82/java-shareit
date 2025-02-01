@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class CommentService {
     private final CommentRepository repository;
     private final BookingRepository bookingRepository;
 
+    @Transactional
     public Comment addComment(long userId, Item item, String textComment) {
         LocalDateTime now = LocalDateTime.now();
         User user = userService.getById(userId);
@@ -41,6 +43,7 @@ public class CommentService {
                 .created(LocalDateTime.now())
                 .build();
 
+        item.getComments().add(comment);
         return repository.save(comment);
     }
 
