@@ -58,7 +58,6 @@ public class Item {
                 ", description='" + description + '\'' +
                 ", available=" + available +
                 ", owner=" + owner +
-                ", comments=" + comments +
                 '}';
     }
 }

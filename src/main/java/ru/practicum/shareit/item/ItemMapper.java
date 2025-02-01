@@ -21,11 +21,13 @@ public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
 
-        List<CommentDto> commentDtoList = new ArrayList<>();
-        commentDtoList = item.getComments().stream()
+        List<CommentDto> commentDtoList = item.getComments().stream()
                 .map(ItemMapper::commentDto)
                 .toList();
-
+        /*commentDtoList = item.getComments().stream()
+                .map(ItemMapper::commentDto)
+                .toList();
+*/
 
         return ItemDto.builder()
                 .id(item.getId())
