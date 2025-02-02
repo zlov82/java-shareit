@@ -10,6 +10,8 @@ import ru.practicum.shareit.item.dto.CreateItemRequest;
 import ru.practicum.shareit.item.dto.UpdateItemRequest;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestService;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
@@ -25,12 +27,23 @@ public class ItemService {
     private final UserService userService;
     private final ItemRepository itemRepository;
     private final CommentService commentService;
+    private final ItemRequestService itemRequestService;
     private final BookingRepository bookingRepository;
 
     public Item saveItem(long userId, CreateItemRequest createItemRequest) {
         User owner = userService.getById(userId);
+
+
         Item item = ItemMapper.toItem(createItemRequest);
         item.setOwner(owner);
+
+        Long requestId = createItemRequest.getRequestId();
+
+        if (requestId != null) {
+            ItemRequest itemRequest = itemRequestService.getById(requestId);
+            item.setItemRequest(itemRequest);
+        }
+
         log.info("Вещь для сохранения: {}", item);
         return itemRepository.save(item);
     }
@@ -89,5 +102,11 @@ public class ItemService {
         List<Item> listItems = itemRepository.searchItemsByNameAndDescription(text);
         log.info("Результат поиска по строке {}\n{}", text, listItems);
         return listItems;
+    }
+
+    public List<Item> getAllByRequestor(ItemRequest itemRequest) {
+        List<Item> itemList = itemRepository.findAllByItemRequest(itemRequest);
+        log.info("Список вещений по запросу {} {}", itemRequest.getId(), itemList);
+        return itemList;
     }
 }

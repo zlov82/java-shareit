@@ -16,4 +16,6 @@ public class CreateItemRequest {
 
     @NotNull(message = "Доступность обязательна")
     private Boolean available;
+
+    private Long requestId;
 }

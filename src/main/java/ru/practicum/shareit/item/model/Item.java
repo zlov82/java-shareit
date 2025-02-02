@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Table(name = "items")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +40,11 @@ public class Item {
     @Transient
     private LocalDateTime nextBooking;
 
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    @Builder.Default
+    private ItemRequest itemRequest = null;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,16 +55,5 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", available=" + available +
-                ", owner=" + owner +
-                '}';
     }
 }
