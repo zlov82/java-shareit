@@ -12,6 +12,7 @@ import java.util.Objects;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,15 +30,6 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }
 
