@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.item.dto.CreateItemRequest;
 import ru.practicum.shareit.item.dto.UpdateItemRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -16,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ItemController.class)
@@ -34,6 +35,8 @@ public class ItemControllerTest {
     private Long userId = 1L;
     private Item item1;
     private Item item2;
+
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @BeforeEach
     void setUp() {
@@ -136,15 +139,18 @@ public class ItemControllerTest {
         verify(itemService, times(1)).updateItem(userId, editedItem.getId(), updateItemRequest);
     }
 
-    /*@Test
+    @Test
     void create() throws Exception {
-
         Item saveItem = Item.builder()
                 .id(3L)
-                .name("saved")
+                .name("Item3")
                 .description("Description3")
                 .available(true)
-                .owner(user)
+                .owner(User.builder()
+                        .id(10L)
+                        .name("Owner Created Item")
+                        .email("superOwner@email.com")
+                        .build())
                 .build();
 
         CreateItemRequest request = CreateItemRequest.builder()
@@ -153,17 +159,15 @@ public class ItemControllerTest {
                 .available(true)
                 .build();
 
-        when(itemService.saveItem(userId, request)).thenReturn(saveItem);
+        when(itemService.saveItem(anyLong(), any(CreateItemRequest.class))).thenReturn(saveItem);
 
         mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", userId)
-                        .content(new ObjectMapper().writeValueAsString(request))
+                        .content(mapper.writeValueAsString(request))
                 )
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value(item1.getName()));
-
-        verify(itemService, times(1)).saveItem(userId, request);
-    }*/
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(saveItem.getId()))
+                .andExpect(jsonPath("$.name").value(saveItem.getName()));
+    }
 }

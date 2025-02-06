@@ -23,12 +23,6 @@ public class ItemRequestController {
         return ItemRequestMapper.toItemRequestDto(itemRequest);
     }
 
-    @PostMapping("/1")
-    public ItemRequestDto addNewRequestTest(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        ItemRequest itemRequest = service.createRequest(userId, CreateItemRequestDto.builder().build());
-        return ItemRequestMapper.toItemRequestDto(itemRequest);
-    }
-
     @GetMapping
     public List<ItemRequestDto> getUserRequests(@RequestHeader("X-Sharer-User-Id") Long userId) {
         //С данными о вещах

@@ -81,7 +81,7 @@ public class ItemRequestServiceTest {
 
         long nonExistingUserId = 999L;
         NotFoundException exception = assertThrows(NotFoundException.class,
-                () -> requestService.createRequest(nonExistingUserId,inputDto));
+                () -> requestService.createRequest(nonExistingUserId, inputDto));
     }
 
     @Test
@@ -96,12 +96,12 @@ public class ItemRequestServiceTest {
         CreateItemRequestDto inputDto1 = CreateItemRequestDto.builder()
                 .description("Запрос 1")
                 .build();
-        ItemRequest req1 = requestService.createRequest(user1.getId(),inputDto1);
+        ItemRequest req1 = requestService.createRequest(user1.getId(), inputDto1);
 
         CreateItemRequestDto inputDto2 = CreateItemRequestDto.builder()
                 .description("Запрос 2")
                 .build();
-        ItemRequest req2 = requestService.createRequest(user1.getId(),inputDto2);
+        ItemRequest req2 = requestService.createRequest(user1.getId(), inputDto2);
 
         List<ItemRequest> requests = requestService.getUserRequests(user1.getId());
         assertNotNull(requests);
@@ -115,7 +115,7 @@ public class ItemRequestServiceTest {
         CreateItemRequestDto inputDto = CreateItemRequestDto.builder()
                 .description("Запрос для получения")
                 .build();
-        ItemRequest created = requestService.createRequest(user1.getId(),inputDto);
+        ItemRequest created = requestService.createRequest(user1.getId(), inputDto);
 
         ItemRequest request = requestRepository.findById(created.getId()).orElseThrow();
         Item item = Item.builder()
@@ -139,6 +139,25 @@ public class ItemRequestServiceTest {
     @Test
     void whenGetNonExistingRequestById_thenThrowNotFoundException() {
         long nonExistingRequestId = 999L;
-        assertThrows(NotFoundException.class,  () -> requestService.getRequestById(nonExistingRequestId));
+        assertThrows(NotFoundException.class, () -> requestService.getRequestById(nonExistingRequestId));
+    }
+
+    @Test
+    void getAnotherUserRequest() {
+        CreateItemRequestDto request1 = CreateItemRequestDto.builder()
+                .description("Нужно для пользователя " + user1.getId())
+                .build();
+
+        CreateItemRequestDto request2 = CreateItemRequestDto.builder()
+                .description("Нужно для пользователя " + user2.getId())
+                .build();
+
+        ItemRequest itemRequest1 = requestService.createRequest(user1.getId(), request1);
+        ItemRequest itemRequest2 = requestService.createRequest(user2.getId(), request2);
+
+        List<ItemRequest> itemRequests = requestService.getAnotherUserRequest(user1.getId());
+        assertNotNull(itemRequests);
+        assertEquals(1, itemRequests.size());
+        assertEquals(user2.getId(), itemRequests.get(0).getRequestor().getId());
     }
 }

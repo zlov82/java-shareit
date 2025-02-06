@@ -8,13 +8,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CreateItemRequest {
-    //@NotBlank(message = "Наименование вещи обязательно")
     private String name;
 
-    //@NotBlank(message = "Описание обязательно")
     private String description;
 
-    //@NotNull(message = "Доступность обязательна")
     private Boolean available;
 
     private Long requestId;
