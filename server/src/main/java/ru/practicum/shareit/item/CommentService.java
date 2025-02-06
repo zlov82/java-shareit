@@ -43,6 +43,7 @@ public class CommentService {
                 .created(LocalDateTime.now())
                 .build();
 
+        log.info("Комментарий готов к записи - {}", comment.toString());
         item.getComments().add(comment);
         return repository.save(comment);
     }
