@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dao.BookingRepository;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
+import ru.practicum.shareit.item.dto.CreateItemRequest;
+import ru.practicum.shareit.item.dto.UpdateItemRequest;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -106,4 +109,80 @@ public class ItemServiceTest {
         assertEquals(commentResponse.getText(), comment.getText());
     }
 
+    @Test
+    void whenEditItem_thenReturnEditedItemDto() {
+        UpdateItemRequest update = UpdateItemRequest.builder()
+                .name("UpdatedName")
+                .description("UpdatedDescription")
+                .available(false)
+                .build();
+
+        Item updatedDto = itemService.updateItem(user.getId(), item1.getId(), update);
+
+        assertNotNull(updatedDto);
+        assertEquals("UpdatedName", updatedDto.getName());
+        assertEquals("UpdatedDescription", updatedDto.getDescription());
+    }
+
+    @Test
+    void whenEditItemWithNonOwner_thenThrowOwnerException() {
+        UpdateItemRequest update = UpdateItemRequest.builder()
+                .name("NewName")
+                .build();
+
+        assertThrows(NotFoundException.class, () -> itemService.updateItem(booker.getId(), item1.getId(), update));
+    }
+
+    @Test
+    void whenEditItemWithNonItem_thenThrowNotFoundException() {
+        UpdateItemRequest update = UpdateItemRequest.builder()
+                .name("NewName")
+                .build();
+
+        assertThrows(NotFoundException.class, () -> itemService.updateItem(booker.getId(), 999L, update));
+    }
+
+    @Test
+    void whenEditItemWithNonUser_thenThrowNotFoundException() {
+        UpdateItemRequest update = UpdateItemRequest.builder()
+                .name("NewName")
+                .build();
+
+        assertThrows(NotFoundException.class, () -> itemService.updateItem(999L, item1.getId(), update));
+    }
+
+    @Test
+    void whenSearchByText_thenReturnMatchingItems() {
+        List<Item> result = itemService.search("item1");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(item1.getName(), result.getFirst().getName());
+    }
+
+    @Test
+    void whenSearchByEmptyText_thenReturnEmptyList() {
+        List<Item> result = itemService.search("   ");
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void whenCreateItem_thenReturnCreatedItemDto() {
+        CreateItemRequest newItemDto = CreateItemRequest.builder()
+                .name("NewItem")
+                .description("NewDescription")
+                .available(true)
+                .build();
+
+        Item created = itemService.saveItem(user.getId(), newItemDto);
+
+        assertNotNull(created);
+        assertEquals("NewItem", created.getName());
+        assertEquals("NewDescription", created.getDescription());
+    }
+
+    @Test
+    void whenGetByIdAndOwnerIdWithNonExistingItem_thenThrowNotFoundException() {
+        assertThrows(NotFoundException.class, () -> itemService.getItemById(999L));
+    }
 }
