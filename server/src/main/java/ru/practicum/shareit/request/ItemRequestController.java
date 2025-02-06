@@ -19,7 +19,13 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto addNewRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
                                         @RequestBody CreateItemRequestDto requestDto) {
-        ItemRequest itemRequest = service.addNewRequest(userId,requestDto);
+        ItemRequest itemRequest = service.createRequest(userId,requestDto);
+        return ItemRequestMapper.toItemRequestDto(itemRequest);
+    }
+
+    @PostMapping("/1")
+    public ItemRequestDto addNewRequestTest(@RequestHeader("X-Sharer-User-Id") Long userId) {
+        ItemRequest itemRequest = service.createRequest(userId, CreateItemRequestDto.builder().build());
         return ItemRequestMapper.toItemRequestDto(itemRequest);
     }
 

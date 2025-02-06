@@ -20,7 +20,7 @@ public class ItemRequestService {
     private final ItemRequestRepository repository;
     private final ItemRepository itemRepository;
 
-    public ItemRequest addNewRequest(Long userId, CreateItemRequestDto requestDto) {
+    public ItemRequest createRequest(Long userId, CreateItemRequestDto requestDto) {
         User user = userService.getById(userId);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(user, requestDto);
         return repository.save(itemRequest);

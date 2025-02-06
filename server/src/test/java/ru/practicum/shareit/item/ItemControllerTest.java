@@ -136,16 +136,24 @@ public class ItemControllerTest {
         verify(itemService, times(1)).updateItem(userId, editedItem.getId(), updateItemRequest);
     }
 
-/*    @Test
+    /*@Test
     void create() throws Exception {
 
-        CreateItemRequest request = CreateItemRequest.builder()
-                .name(item1.getName())
-                .description(item1.getDescription())
-                .available(item1.isAvailable())
+        Item saveItem = Item.builder()
+                .id(3L)
+                .name("saved")
+                .description("Description3")
+                .available(true)
+                .owner(user)
                 .build();
 
-        when(itemService.saveItem(userId, request)).thenReturn(item1);
+        CreateItemRequest request = CreateItemRequest.builder()
+                .name("Name")
+                .description("Description")
+                .available(true)
+                .build();
+
+        when(itemService.saveItem(userId, request)).thenReturn(saveItem);
 
         mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
