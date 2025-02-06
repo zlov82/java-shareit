@@ -2,9 +2,11 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 @Builder
-public class CreateItemRequestDto {
+@Jacksonized
+public class CreateRequestDtoServer {
     private String description;
 }

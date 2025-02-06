@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.dto.CreateRequestDtoServer;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto addNewRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestBody CreateItemRequestDto requestDto) {
+                                        @RequestBody CreateRequestDtoServer requestDto) {
         ItemRequest itemRequest = service.createRequest(userId,requestDto);
         return ItemRequestMapper.toItemRequestDto(itemRequest);
     }

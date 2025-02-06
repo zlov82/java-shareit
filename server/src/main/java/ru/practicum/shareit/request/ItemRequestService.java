@@ -6,7 +6,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
-import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.dto.CreateRequestDtoServer;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
@@ -20,7 +20,7 @@ public class ItemRequestService {
     private final ItemRequestRepository repository;
     private final ItemRepository itemRepository;
 
-    public ItemRequest createRequest(Long userId, CreateItemRequestDto requestDto) {
+    public ItemRequest createRequest(Long userId, CreateRequestDtoServer requestDto) {
         User user = userService.getById(userId);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(user, requestDto);
         return repository.save(itemRequest);

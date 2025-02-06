@@ -12,7 +12,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
-import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.dto.CreateRequestDtoServer;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.dao.UserRepository;
 
@@ -59,7 +59,7 @@ public class ItemRequestServiceTest {
 
     @Test
     void whenCreateRequest_thenReturnRequestOutputDto() {
-        CreateItemRequestDto input = CreateItemRequestDto.builder()
+        CreateRequestDtoServer input = CreateRequestDtoServer.builder()
                 .description("Нужна дрель")
                 .build();
 
@@ -75,7 +75,7 @@ public class ItemRequestServiceTest {
 
     @Test
     void whenCreateRequestWithNonExistingUser_thenThrowNotFoundException() {
-        CreateItemRequestDto inputDto = CreateItemRequestDto.builder()
+        CreateRequestDtoServer inputDto = CreateRequestDtoServer.builder()
                 .description("Нужна отвертка")
                 .build();
 
@@ -93,12 +93,12 @@ public class ItemRequestServiceTest {
 
     @Test
     void whenGetAllRequests_thenReturnListOfRequests() {
-        CreateItemRequestDto inputDto1 = CreateItemRequestDto.builder()
+        CreateRequestDtoServer inputDto1 = CreateRequestDtoServer.builder()
                 .description("Запрос 1")
                 .build();
         ItemRequest req1 = requestService.createRequest(user1.getId(), inputDto1);
 
-        CreateItemRequestDto inputDto2 = CreateItemRequestDto.builder()
+        CreateRequestDtoServer inputDto2 = CreateRequestDtoServer.builder()
                 .description("Запрос 2")
                 .build();
         ItemRequest req2 = requestService.createRequest(user1.getId(), inputDto2);
@@ -112,7 +112,7 @@ public class ItemRequestServiceTest {
 
     @Test
     void whenGetRequestById_thenReturnRequestOutputDto() {
-        CreateItemRequestDto inputDto = CreateItemRequestDto.builder()
+        CreateRequestDtoServer inputDto = CreateRequestDtoServer.builder()
                 .description("Запрос для получения")
                 .build();
         ItemRequest created = requestService.createRequest(user1.getId(), inputDto);
@@ -144,11 +144,11 @@ public class ItemRequestServiceTest {
 
     @Test
     void getAnotherUserRequest() {
-        CreateItemRequestDto request1 = CreateItemRequestDto.builder()
+        CreateRequestDtoServer request1 = CreateRequestDtoServer.builder()
                 .description("Нужно для пользователя " + user1.getId())
                 .build();
 
-        CreateItemRequestDto request2 = CreateItemRequestDto.builder()
+        CreateRequestDtoServer request2 = CreateRequestDtoServer.builder()
                 .description("Нужно для пользователя " + user2.getId())
                 .build();
 

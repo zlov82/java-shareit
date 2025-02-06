@@ -2,11 +2,11 @@ package ru.practicum.shareit.request;
 
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.dto.CreateRequestDtoServer;
 import ru.practicum.shareit.user.User;
 
 public class ItemRequestMapper {
-    public static ItemRequest toItemRequest(User user, CreateItemRequestDto requestDto) {
+    public static ItemRequest toItemRequest(User user, CreateRequestDtoServer requestDto) {
         return ItemRequest.builder()
                 .description(requestDto.getDescription())
                 .requestor(user)

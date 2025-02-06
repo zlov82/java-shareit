@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.dto.CreateItemRequestDto;
+import ru.practicum.shareit.request.dto.CreateRequestDtoServer;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class ItemRequestControllerTest {
     private Long userId;
     private Long userId2;
     private Long requestId;
-    private CreateItemRequestDto requestInput;
+    private CreateRequestDtoServer requestInput;
     private ItemRequest requestOutput;
     private User user;
     private User user2;
@@ -56,7 +56,7 @@ public class ItemRequestControllerTest {
                 .email("drugoi@mail.com")
                 .build();
 
-        requestInput = CreateItemRequestDto.builder()
+        requestInput = CreateRequestDtoServer.builder()
                 .description("Станок для заточки ножей")
                 .build();
 
@@ -105,17 +105,17 @@ public class ItemRequestControllerTest {
 
     @Test
     void create() throws Exception {
-        CreateItemRequestDto createItemRequestDto = CreateItemRequestDto.builder()
+        CreateRequestDtoServer createItemRequestDto = CreateRequestDtoServer.builder()
                 .description("Что-то нужно строчно")
                 .build();
 
-        when(itemRequestService.createRequest(anyLong(), any(CreateItemRequestDto.class))).thenReturn(requestOutput);
+        when(itemRequestService.createRequest(anyLong(), any(CreateRequestDtoServer.class))).thenReturn(requestOutput);
 
         mockMvc.perform(post("/requests")
                         .header("X-Sharer-User-Id", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(createItemRequestDto)))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isOk());
     }
 
     @Test
