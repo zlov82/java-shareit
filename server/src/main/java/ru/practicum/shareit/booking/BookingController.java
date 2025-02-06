@@ -44,7 +44,8 @@ public class BookingController {
         if (createBookingRequest.getStart().isEqual(createBookingRequest.getEnd())) {
             throw new ForbiddenException("Время начала брони не может совпадать в временем конца брони");
         }
-        return BookingMapper.toBookingDto(bookingService.saveBooking(userId, createBookingRequest));
+        Booking booking = bookingService.saveBooking(userId, createBookingRequest);
+        return BookingMapper.toBookingDto(booking);
     }
 
     @PatchMapping("/{bookingId}")

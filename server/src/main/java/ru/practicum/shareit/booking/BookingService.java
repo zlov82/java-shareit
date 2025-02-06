@@ -97,10 +97,6 @@ public class BookingService {
         return bookings;
     }
 
-    public boolean isItemBookingByUser(Item item, User user, BookingStatus status, LocalDateTime now) {
-        return bookingRepository.existsByItemAndUserAndStatusAndEndBefore(item, user, status, now);
-    }
-
     private Booking getBookingById(Long bookingId) {
         return bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Бронь не найдена"));
     }

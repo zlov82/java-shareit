@@ -104,9 +104,4 @@ public class ItemService {
         return listItems;
     }
 
-    public List<Item> getAllByRequestor(ItemRequest itemRequest) {
-        List<Item> itemList = itemRepository.findAllByItemRequest(itemRequest);
-        log.info("Список вещений по запросу {} {}", itemRequest.getId(), itemList);
-        return itemList;
-    }
 }

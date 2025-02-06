@@ -12,13 +12,6 @@ public class ErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrResponse handleEmailValidation(final EmailValidationException e) {
-        log.error("Ошибка валидации email");
-        return new ErrResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrResponse handleNotFound(final NotFoundException e) {
         log.error("Ошибка {}", e.getMessage());
